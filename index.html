@@ -1,0 +1,1000 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+<meta charset="UTF-8">  
+<title>Compile and Execute C++ online</title>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="Description" content="Compile and Execute C++ online on Linux  - You can compile and run, execute your source code related to Java, JSP, Cold Fusion, C, C++, Pascal, Fortran, PHP, Perl, Ruby and Python programs onnline using your browsers, iPhone, iPad or any other online device like smart TV using this virtual Linux / Unix  Server." />
+<meta name="Keywords" content="Unix, Web, Compile, Run, Java, C, C++, GO, PHP, Perl, Ruby and Python Programs" />
+<script src="/jquery.min.js"></script>
+<script src="/jquery.easyui.min.js"></script>
+<script src="/ace/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/ace/src-min/keybinding-vim.js" type="text/javascript" charset="utf-8"></script>
+<script src="/ace/src-min/keybinding-emacs.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="/col.css">
+
+   <style type="text/css">
+   .terminal {
+      font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+      font-size: 12px;
+      color: rgb(240, 240, 240);
+      background: #383734 !important; 
+      padding: 2px;
+      border: none !important;
+                width:100%;
+                height:100%;
+   }
+   </style>
+<script type="text/javascript">
+// Binding keys
+$(window).load(function () {
+
+   var cwd = "/tmp";
+   var filename = "main.java";
+   addNewTab(cwd, filename, null);
+
+   var newwidth = $(window).width();
+   newwidth = newwidth / 2;
+   var p = $("#cc").layout('panel','east');
+   p.panel('resize',{width:'44%'});
+   $('#cc').layout('resize');
+//   $("#loading").css({"visibility":"hidden"});
+});
+if ( $.browser.msie ) {
+/*
+   window.onbeforeunload = function(e){
+    var tabClick = false;
+    $('#tt').tabs({
+        onSelect:function(title,index){
+           tabClick = true;
+           return true;
+        }
+    });
+    if( !tabClick ){
+      return "Leaving this page may cause loss of your code!";
+    }
+   };
+*/
+}else{
+   window.onbeforeunload = function(){
+      return "Leaving this page may cause loss of your code!";
+   };
+}
+</script>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-32077377-1";
+urchinTracker();
+</script>
+</head>
+<body class="easyui-layout">
+<form id="ff">
+<input type="hidden" name="lang"/>
+<input type="hidden" name="code"/>
+<input type="hidden" name="header"/>
+<input type="hidden" name="util"/>
+<input type="hidden" value="java" id="lang"/>
+<input type="hidden" value="java" id="ext"/>
+<input type="support" name="support"/>
+<input type="hidden" id="root" value="/tmp" />
+<input type="hidden" id="port" value="8080" />
+
+<div id="uploadbox" class="easyui-window" title="Upload File" data-options="iconCls:'icon-save',modal:true, maximizable:false, closed:true, minimizable:false" style="width:520px;height:250px;padding:10px;">
+</div>
+<div id="gitlogin" class="easyui-window" title="Save Project at GitHub" data-options="iconCls:'icon-save',modal:true, maximizable:false, closed:true, minimizable:false" style="width:700px;height:500px;padding:10px;">
+</div>
+
+<div id="dircontext" class="easyui-menu" style="width:150px;">
+   <div onclick="newFile()">Create File</div>
+   <div onclick="openFormBox()">Upload File</div>
+   <div onclick="newDir()">New Directory</div>
+   <div onclick="deleteDir()">Delete Directory</div>
+   <div onclick="renameFile()">Rename Directory</div>
+</div>
+<div id="filecontext" class="easyui-menu" style="width:150px;">
+   <div onclick="loadFile(false, false)">Open File</div>
+   <div onclick="renameFile()">Rename File</div>
+   <div onclick="deleteFile()">Delete File</div>
+   <div onclick="downloadFile()">Download File</div>
+</div>
+
+<div id="loading"></div>
+<iframe id="download" style="display:hidden">
+</iframe>
+
+<div data-options="region:'north'" style="height:50px;"><!--HEADER STARTS -->
+
+ <div class="easyui-panel" style="padding:5px;">
+        <a href="http://www.compileonline.com" alt="Compile On Line"><img src="http://www.compileonline.com/images/col.png" style="height:30px;margin-left:5px;border:0px;"/></a>
+        <a href="#" class="easyui-linkbutton" data-options="plain:true">Home</a>
+        <a id="btn-edit" href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-edit'">Edit</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm2', plain:true">Project</a>
+        <a href="#" class="easyui-linkbutton" data-options="plain:true">About</a>
+</div>
+<div id="mm1" style="width:200px;">
+      <div data-options="iconCls:'icon-undo'">Undo</div>
+        <div data-options="iconCls:'icon-redo'">Redo</div>
+        <div class="menu-sep"></div>
+        <div>Cut</div>
+        <div>Copy</div>
+        <div>Paste</div>
+</div>
+<div id="mm2" style="width:200px;">
+     <div id="save_at_github" data-options="iconCls:'icon-undo'">Save Project at GitHub</div>
+     <div data-options="iconCls:'icon-undo'">Open GitHub Project</div>
+     <div data-options="iconCls:'icon-undo'">Public Sharing via COL</div>
+     <div class="menu-sep"></div>
+     <div data-options="iconCls:'icon-undo'">Export Project</div>
+     <div data-options="iconCls:'icon-redo'">Import Project</div>
+     <div data-options="iconCls:'icon-redo'">Share Project</div>
+</div>
+
+
+</div><!--HEADER ENDS -->
+<div data-options="region:'south'" style="height:100px;"><!--FOOTER STARTS -->
+<center>Footer</center>
+</div><!--FOOTER ENDS -->
+<div data-options="region:'east',title:'Terminal', iconCls:'icon-reload', split:true" style="width:45%; background: #383734 !important;"><!--TERMINAL STARTS -->
+<div id="terminal"></div>
+</div><!--TERMINAL ENDS -->
+<div data-options="region:'west',title:'Project',iconCls:'icon-reload', split:true, tools: [{ iconCls:'icon-upload', handler:function(){openFormBox()}},{ iconCls:'icon-reload', handler:function(){reloadTree()}},{ iconCls:'icon-save', handler:function(){saveFiles()}}, { iconCls:'icon-edit', handler:function(){newDir()}}, { iconCls:'icon-remove', handler:function(){deleteFile()} }, { iconCls:'icon-add', handler:function(){newFile()} }]" style="width:250px;">
+<ul id="home" class="easyui-tree" data-options="url:'load_tree',method:'GET', animate:true,lines:true">
+<div id='treewait'>
+<img style="margin-left:4px;margin-top:3px;width:28px; height:28px;" src='/images/loading.gif'/>
+</div>
+</ul>
+</div>
+<div data-options="region:'center'" style="padding:0px;background:#eee;"><!--CODE AREA STARTS -->
+<div data-options="fit:true,border:false,tools:'#tab-tools',toolPosition:'left'" id="codebox" class="easyui-tabs">
+</div>
+<div id="tab-tools" style="border-top:0px; border-right:0px;">
+<div id='wait' style='display:none'>
+<img style="margin-left:4px;margin-top:3px;width:28px; height:28px;" src='/images/loading.gif'/>
+</div>
+<a href="javascript:void(0)" onclick="javascript:submitForm();return false" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-compile'" target="view" style="width:150px;white-space:nowrap;"><b>Compile &amp; Execute</b></a></div>
+</div>
+</div><!--CODE AREA STARTS -->
+<script>
+$(function(){
+   var nodeid;
+   var nodetext;
+   var nodetype;
+   $('#home').tree({
+      onContextMenu:function( e, node ){
+         e.preventDefault();
+         // select the node
+         $('#home').tree('select', node.target);
+         // display context menu
+         if( node.type === "F" ){
+            $('#filecontext').menu('show', {
+               left: e.pageX,
+               top: e.pageY
+            });
+         }else if( node.type === "D" ){
+            $('#dircontext').menu('show', {
+               left: e.pageX,
+               top: e.pageY
+            });
+         }
+      },
+      onExpand:function(node){
+         $(this).tree('select', node.target);
+      },
+      onCollapse:function(node){
+         $(this).tree('select', node.target);
+      },
+      onDblClick:function(node){
+         loadFile( node, false );
+      },
+      onBeforeEdit:function(node){
+         nodeid = node.id;
+         nodetext = node.text;
+         nodetype = node.type;
+      },
+      onAfterEdit:function(node){
+         if( !( node.text.length) && nodetype === "F" ) {
+             $.messager.alert('Message', 'File name can\'t be null', 'info');
+             $('#home').tree('update', {
+		target: node.target,
+		text: nodetext
+	     });
+             return false;
+         }else if( !( node.text.length ) && nodetype === "D" ) {
+             $.messager.alert('Message', 'Directory name can\'t be null', 'info');
+             $('#home').tree('update', {
+		target: node.target,
+		text: nodetext
+	     });
+             return false;
+         }
+         var index = node.id.lastIndexOf("/");
+         var cwd = node.id.substring(0, index);
+         var newid = cwd + "/" + node.text;
+         // Duplicate check
+         var father = $('#home').tree('getParent', node.target );
+         var children = $('#home').tree('getChildren', father.target );
+         var retVal = true;
+         $.each(children, function( i, n) {
+            if( newid === n.id && nodeid !== newid ){
+                alert("A file with the same name already exists!");
+                $.messager.alert('Message', 'A file with the same name already exists!', 'info');
+                retVal = false;
+                return false;
+            }
+         });
+         if( !retVal ) {
+           $('#wait').hide();
+           $('#home').tree('update', {
+                target: node.target,
+		text: nodetext
+            });
+            return false;
+         }
+          // Make Ajax call to rename file/directory
+          var url = "rename_file";
+          var inputs = JSON.stringify({ "cwd": cwd, "oldnode": nodetext, "newnode": node.text});
+          $.ajax({
+               type: "POST",
+               url: url,
+               data: inputs,
+               contentType: 'application/json; charset=utf-8',
+               dataType: 'json',
+               beforeSend: function(  ) {
+                    $("#loading").css({"visibility":"visible"});
+               },
+               success: function(data)
+               {
+                   if( data.status ){
+                      $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+                      $('#home').tree('update', {
+                          target: node.target,
+                          text: nodetext
+                      });
+                   }else{
+                      $('#home').tree('update', {
+                          target: node.target,
+                          id: newid
+                      });
+                      node.id = newid;
+                      refreshTab( cwd, nodetext, node.text );
+                   }
+                   $("#loading").css({"visibility":"hidden"});
+               }
+          });
+      },
+      onBeforeLoad:function(node, param){
+         $("#loading").css({"visibility":"show"});
+         $("#treewait").show();
+      },
+      onLoadSuccess:function(node, data){
+         $("#loading").css({"visibility":"hidden"});
+         $("#treewait").hide();
+      }
+   }); 
+});
+$(function(){
+   $('#codebox').tabs({
+      onLoad:function(panel){
+/*
+         var root = $("#root").val();
+         var ext = $("#ext").val();
+         var mainid = root + "/main." + ext;
+         editors[mainid] = new ace.edit(mainid);
+         editors[mainid].setTheme("ace/theme/crimson_editor");
+         editors[mainid].getSession().setMode("ace/mode/c_cpp");
+         editors[mainid].getSession().setUseWrapMode(true);
+*/
+      },
+      onBeforeClose: function(title,index){
+         if( deleting ){
+              // simply return back
+              return true;
+         }
+         var target = this;
+         var tab = $(target).tabs('getTab',index);
+         var tabid = tab.panel('options').id;
+         if( editors[tabid] ){
+            if( !editors[tabid].getSession().getUndoManager().isClean() ){
+               $.messager.defaults.ok = "Save";
+               $.messager.defaults.cancel = "No";
+               $.messager.confirm('Confirmation','Do you want to save your changes for the file '+title,function(r){
+                  if (r){
+                      saveFiles();
+                      var opts = $(target).tabs('options');
+                      var bc = opts.onBeforeClose;
+                      opts.onBeforeClose = function(){};
+                      $(target).tabs('close',index);
+                      opts.onBeforeClose = bc;
+                  }else{
+                      var opts = $(target).tabs('options');
+                      var bc = opts.onBeforeClose;
+                      opts.onBeforeClose = function(){};
+                      $(target).tabs('close',index);
+                      opts.onBeforeClose = bc;
+                  }
+               });
+            }else{
+               var opts = $(target).tabs('options');
+               var bc = opts.onBeforeClose;
+               opts.onBeforeClose = function(){};
+               $(target).tabs('close',index);
+               opts.onBeforeClose = bc;
+            }
+         }else{
+               var opts = $(target).tabs('options');
+               var bc = opts.onBeforeClose;
+               opts.onBeforeClose = function(){};
+               $(target).tabs('close',index);
+               opts.onBeforeClose = bc;
+         }
+         //return false;	// prevent from closing
+     }
+  });
+});
+function openFormBox(){
+    $('#uploadbox').window('open');
+    $('#uploadbox').window('refresh', 'formbox.htm');
+}
+$('#save_at_github').click( function(){
+    $('#gitlogin').window('open');
+    $('#gitlogin').window('refresh', 'gitlogin.htm');
+});
+
+function save_at_github(){
+     var  loginid = $('#gitloginid').val();
+     if( !loginid ){
+        $.messager.alert('Alert Message','Enter your GitHub login ID', 'info');
+        return false;
+     }
+     var  password = $('#gitpassword').val();
+     if( !password ){
+        $.messager.alert('Alert Message','Enter your GitHub account password', 'info');
+        return false;
+     }
+     var  title = $('#projecttitle').val();
+     if( !title ){
+        $.messager.alert('Alert Message','Enter a short project title', 'info');
+        return false;
+     }
+     var  detail = $('#detail').val();
+     if( !detail ){
+        $.messager.alert('Alert Message','Enter a short description of your project', 'info');
+        return false;
+     }
+     // Make Ajax call to delete file
+     var url = "save_at_github";
+     var inputs = JSON.stringify({ "loginid": loginid, "password": password, "title":title, "detail":detail});
+     $.ajax({
+          type: "POST",
+	  url: url,
+	  data: inputs,
+	  contentType: 'application/json; charset=utf-8',
+	  dataType: 'json',
+	  beforeSend: function(  ) {
+	        $("#gitloading").css({"visibility":"visible"});
+	  },
+	  success: function(data)
+	  {
+	       if( data.status ){
+		      $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+		}else{
+		      $.messager.alert('Alert Message', JSON.stringify(data.message), 'info');
+                }
+	        $("#gitloading").css({"visibility":"hidden"});
+          }
+    });
+}
+function closeFormBox(){
+    $('#uploadbox').window('close');
+}
+function closeGitHubLogin(){
+    $('#gitlogin').window('close');
+}
+function downloadFile(){
+    var selected = $('#home').tree('getSelected');
+    if( !selected && selected.type !== 'F' ){
+        $.messager.alert('Alert Message','Select a file to be downloaded', 'info');
+        return false;
+    }
+    var index = selected.id.lastIndexOf("/");
+    var cwd = selected.id.substring(0, index);
+    var filename = selected.id.substring(index+1, selected.id.length);
+    var inputs = JSON.stringify({ "cwd": cwd, "file": filename});
+    var url = "/download_file" + "?cwd=" + cwd + "&file=" + filename;
+    $('#download').attr('src', url);
+}
+function uploadFile(){
+   var selected = $('#home').tree('getSelected');
+   if( !selected && selected.type !== 'D' ){
+       $.messager.alert('Alert Message','Select a directory where file will be uploaded', 'info');
+       return false;
+   }
+   $('#home').tree('expand', selected.target);
+   $('#uploadform').form('submit', {
+          onSubmit: function( param ){
+               var $file = $(this).find("input[type=file]");
+               if (!$file.val() || $file.val() == "") {
+                  $.messager.alert('Alert Message','No file selected to be uploaded!', 'info');
+                  return false;
+               }
+               param.cwd = selected.id;
+               $('#uploadbox').window('close');
+               $("#loading").css({"visibility":"visible"});
+         },
+         success: function(data)
+         {
+             if( data.status ){
+                $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+                $('#home').tree('update', {
+                    target: node.target,
+                    text: nodetext
+                });
+             }else{
+               var obj = jQuery.parseJSON( data );
+               var filename = obj.filename;
+               var newfile = selected.id + "/" + filename;
+               $('#home').tree('append', {
+                  parent: selected.target,
+                  data: [{
+                      id: newfile,
+                      type: 'F',
+                      text: filename
+                   }]
+               });
+               var node = $('#home').tree('find', newfile);
+               $('#home').tree('select', node.target);
+               loadFile( node, true );
+             }
+             $("#loading").css({"visibility":"hidden"});
+         },
+         error:function(data){
+            alert("error");
+         }
+    });
+}
+function reloadTree(){
+    $('#home').tree('reload');
+}
+function getTabTitle( cwd, filename ){
+   var tabid = cwd + "/" + filename ;
+
+   var rootlen = root.length;
+   var cwdlen = tabid.length;
+   var tabtitle = tabid.substring(rootlen+1, cwdlen);
+    
+   return tabtitle;
+}
+function addNewTab(cwd, filename, ifNew){
+   var tabid = cwd + "/" + filename ;
+   var tabtitle = getTabTitle ( cwd, filename );
+
+   if ($('#codebox').tabs('exists', tabtitle)){
+      $('#codebox').tabs('select', tabtitle);
+      return true;
+   } else {
+      var content;
+      if ( ifNew ) {
+          $('#codebox').tabs('add',{
+             title:tabtitle,
+             id:tabid,
+             closable:true,
+             href:'load_file',
+             extractor:function(data){
+                return data;
+             },
+             onLoad: function( panel ){
+                 editors[tabid] = new ace.edit(tabid);
+                 editors[tabid].setTheme("ace/theme/crimson_editor");
+                 editors[tabid].getSession().setUseWrapMode(true);
+                 editors[tabid].resize( true );
+                 editors[tabid].focus();
+             }
+          });
+      }else{
+          $('#codebox').tabs('add',{
+             title:tabtitle,
+             id:tabid,
+             closable:true,
+             href:'load_file?id=' + tabid,
+             extractor:function(data){
+                return data;
+             },
+             onLoad: function( panel ){
+                 editors[tabid] = new ace.edit(tabid);
+                 editors[tabid].setTheme("ace/theme/crimson_editor");
+                 editors[tabid].getSession().setUseWrapMode(true);
+                 editors[tabid].resize( true );
+                 editors[tabid].focus();
+             }
+          });
+      }
+   }
+   return true;
+}
+function addNewGoogleTab(cwd, filename, ifNew){
+   var tabid = cwd + "/" + filename ;
+   var tabtitle = getTabTitle ( cwd, filename );
+
+   if ($('#codebox').tabs('exists', tabtitle)){
+      $('#codebox').tabs('select', tabtitle);
+      return true;
+   } else {
+      var content;
+      // Get width & height of document space.
+      var url = "http://www.amrood.com" + ':' + $('#port').val() + tabid;
+      $('#codebox').tabs('add',{
+             title:tabtitle,
+             id:tabid,
+             closable:true,
+             href:'load_file',
+             extractor:function(data){
+                return '<iframe width="100%" height="100%" src="http://docs.google.com/viewer?url=' + url + '&amp;embedded=true"  frameborder="0"></iframe>';
+             }
+          });
+   }
+   return true;
+}
+function addNewImageTab(cwd, filename, ifNew){
+   var tabid = cwd + "/" + filename ;
+   var tabtitle = getTabTitle ( cwd, filename );
+
+   if ($('#codebox').tabs('exists', tabtitle)){
+      $('#codebox').tabs('select', tabtitle);
+      return true;
+   } else {
+      var content;
+      // Get width & height of document space.
+      var codebox_w = $('#codebox').width();
+      var codebox_h = $('#codebox').height();
+      var url = "http://www.amrood.com" + ':' + $('#port').val() + tabid;
+      $('#codebox').tabs('add',{
+             title:tabtitle,
+             id:tabid,
+             closable:true,
+             href:'load_file',
+             extractor:function(data){
+                return '<iframe width="100%" height="100%" src=' + url + ' frameborder="0"></iframe>';
+             }
+          });
+   }
+   return true;
+}
+function refreshTab( cwd, oldfilename, newfilename){
+   var newid = cwd + "/" + newfilename;
+
+   var oldtabtitle = getTabTitle ( cwd, oldfilename );
+   var newtabtitle = getTabTitle ( cwd, newfilename );
+   if ($('#codebox').tabs('exists', oldtabtitle)){
+      var ctab = $('#codebox').tabs('getTab', oldtabtitle);
+      $('#codebox').tabs('update', {
+         tab : ctab, 
+         options: {
+             title:newtabtitle,
+             id:newid,
+             href:null
+          }
+      });
+      editors[newid] = new ace.edit(newid);
+      editors[newid].setTheme("ace/theme/crimson_editor");
+      editors[newid].getSession().setMode("ace/mode/c_cpp");
+      editors[newid].getSession().setUseWrapMode(true);
+      editors[newid].resize( true );
+      editors[newid].focus();
+   }
+}
+function saveFiles(){
+   for( var key in  editors ){
+       // Check if this was changed or not.
+       if( !editors[key].getSession().getUndoManager().isClean() ){
+           var filename =  key;
+           var content = editors[key].getValue();
+          // Make Ajax call to save file
+           var url = "save_file";
+           var inputs = JSON.stringify({ "file": filename, "content": content});
+           // Mark this content saved
+           editors[key].getSession().getUndoManager().markClean();
+           $.ajax({
+               type: "POST",
+               url: url,
+               data: inputs,
+               contentType: 'application/json; charset=utf-8',
+               dataType: 'json',
+               beforeSend: function(  ) {
+                  $("#loading").css({"visibility":"visible"});
+               },
+               success: function(data)
+               {
+                   if( data.status ){
+                      $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+                   }else{
+       
+                  }
+                  $("#loading").css({"visibility":"hidden"});
+               }
+           });
+       }
+   }
+}
+function loadFile( node, bypass ){
+    if( !node ){
+       node = $('#home').tree('getSelected');
+    }
+    if( node.type === 'D' ){
+         return false;
+    }
+    var index = node.id.lastIndexOf("/");
+    var cwd = node.id.substring(0, index);
+    var filename = node.id.substring(index+1, node.id.length);
+    var inputs = JSON.stringify({ "cwd": cwd, "file": filename});
+    // Check its mime type first
+    var url = "get_mime_type";
+    $.ajax({
+         type: "POST",
+         url: url,
+         data: inputs,
+         contentType: 'application/json; charset=utf-8',
+         dataType: 'json',
+         beforeSend: function(  ) {
+              $("#loading").css({"visibility":"visible"});
+         },
+         success: function(data)
+         {
+             if( !data.status && data.loadable === 'T' && data.filetype === "text"){
+                addNewTab( cwd, node.text, false);
+             }else if( !data.status && data.loadable === 'T' && data.filetype === "google"){
+                addNewGoogleTab( cwd, node.text, false);
+             }else if( !data.status && data.loadable === 'T' && data.filetype === "image"){
+                addNewImageTab( cwd, node.text, false);
+             }else if( !data.status && data.loadable === 'F' && !bypass ){
+                $.messager.defaults.ok = "Yes";
+                $.messager.defaults.cancel = "No";
+                $.messager.confirm('Confirmation','File does not look editable, still you want to open it?', function(r){
+                  if (r){
+                      addNewTab( cwd, node.text, false);
+                   }
+                 });
+             }else if( data.status ){
+                $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+             }
+             $("#loading").css({"visibility":"hidden"});
+         }
+    });
+    return true;
+}
+var deleting = false;
+function deleteFile(){
+    var selected = $('#home').tree('getSelected');
+    if( !selected || selected.type === 'D' ){
+       $.messager.alert('Message', 'Select a file to be deleted', 'info' );
+       return false;
+    }
+    var index = selected.id.lastIndexOf("/");
+    var cwd = selected.id.substring(0, index);
+    var tabtitle = getTabTitle( cwd, selected.text );
+    var filename = selected.id.substring(index+1, selected.id.length);
+    $.messager.defaults.ok = "Yes";
+    $.messager.defaults.cancel = "No";
+    $.messager.confirm('Confirmation','Do you really want to delete file ' + tabtitle, function(r){
+       deleting = true;
+       if (r){
+          // Make Ajax call to delete file
+          var url = "delete_file";
+          var inputs = JSON.stringify({ "cwd": cwd, "file": filename});
+          $.ajax({
+               type: "POST",
+               url: url,
+               data: inputs,
+               contentType: 'application/json; charset=utf-8',
+               dataType: 'json',
+               beforeSend: function(  ) {
+                    $("#loading").css({"visibility":"visible"});
+               },
+               success: function(data)
+               {
+                   if( data.status ){
+                      $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+                   }else{
+                      // check if its opened in tab
+                      if ($('#codebox').tabs('exists', tabtitle)){
+                         var tab = $('#codebox').tabs('getTab', tabtitle);
+                         var index = $('#codebox').tabs('getTabIndex', tab);
+                         editors[selected.id].getSession().getUndoManager().markClean();
+                         $('#codebox').tabs('close', index);
+                      }
+                      // remove node from the tree
+                      $('#home').tree( 'remove', selected.target );
+                   }
+                   $("#loading").css({"visibility":"hidden"});
+                   deleting = false;
+               }
+          });
+       }
+   });
+}
+function deleteDir(){
+    var selected = $('#home').tree('getSelected');
+    var title = selected.text;
+    if( !selected ){
+       $.messager.alert( "Select a file or directory to be deleted", "Info" );
+       return false;
+    }
+    var cwd = selected.id;
+    // Check if its empty directory or not
+    var children = $('#home').tree('getChildren', selected.target); 
+    if( children.length > 0  ) {
+        $.messager.alert('Message', title + ' directory is not empty','info');
+        return false;
+    }
+    $.messager.defaults.ok = "Yes";
+    $.messager.defaults.cancel = "No";
+    $.messager.confirm('Confirmation','Do you really want to delete directory ' + title, function(r){
+       if (r){
+          // Make Ajax call to delete file
+          var url = "delete_dir";
+          var inputs = JSON.stringify({ "cwd": cwd, "file": title});
+          var retVal = false;
+          $.ajax({
+               type: "POST",
+               url: url,
+               data: inputs,
+               contentType: 'application/json; charset=utf-8',
+               dataType: 'json',
+               beforeSend: function(  ) {
+                    $("#loading").css({"visibility":"visible"});
+               },
+               success: function(data)
+               {
+                   if( data.status ){
+                      $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+                   }else{
+                      $('#home').tree( 'remove', selected.target );
+                   }
+                  $("#loading").css({"visibility":"hidden"});
+               }
+          });
+       }
+   });
+}
+function renameFile(){
+   var selected = $('#home').tree('getSelected');
+   $('#home').tree('beginEdit', selected.target);
+   return true;
+}
+
+function newFile( ){
+   var selected = $('#home').tree('getSelected');
+   $('#wait').show();
+
+   if( !selected ){
+      var root = $('#home').tree('getRoot');
+      $('#home').tree('select', root.target);
+      selected = $('#home').tree('getSelected');
+   }
+   $('#home').tree('expand', selected.target);
+   // Directory validation
+   if( $('#home').tree('isLeaf', selected.target) && selected.type !== "D" ){
+      var father = $('#home').tree('getParent', selected.target );
+      $('#home').tree('select', father.target);
+       selected = $('#home').tree('getSelected');
+   }
+   // Duplicate check
+   var children = $('#home').tree('getChildren', selected.target );
+   var retVal = true;
+   var cwd = selected.id;
+   var ext = $('#ext').val();
+   var filename = "Newfile." + ext;
+   var newfile = cwd + "/" + filename;
+   var count = 1;
+   while( retVal ) {
+       $.each(children, function( index, node) {
+          if( node.id === newfile ){
+             filename = "Newfile(" + count + ")." + ext;
+             newfile = cwd + "/" + filename;
+             retVal = false;
+             return false;
+          }
+      });
+      if( !retVal ) {
+        retVal = true;
+        count = count + 1;
+        continue;
+      }else{
+         $('#wait').hide();
+         break;
+      }
+   }
+   // Make Ajax call to create file
+   var url = "add_file";
+   var inputs = JSON.stringify({ "cwd": cwd, "file": filename});
+   $.ajax({
+        type: "POST",
+        url: url,
+        data: inputs,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        beforeSend: function(  ) {
+             $("#loading").css({"visibility":"visible"});
+        },
+        success: function(data)
+        {
+            if( data.status ){
+               $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+            }else{
+               $('#home').tree('append', {
+                  parent: selected.target,
+                  data: [{
+                      id: newfile,
+                      type: 'F',
+                      text: filename
+                   }]
+               }); 
+               var node = $('#home').tree('find', newfile);
+               $('#home').tree('select', node.target);
+               addNewTab( cwd, filename, true);
+           }
+           $("#loading").css({"visibility":"hidden"});
+        }
+   });
+}
+function newDir(){
+   var selected = $('#home').tree('getSelected');
+   $('#wait').show();
+
+   if( !selected ){
+      var root = $('#home').tree('getRoot');
+      $('#home').tree('select', root.target);
+      selected = $('#home').tree('getSelected');
+   }
+   $('#home').tree('expand', selected.target);
+   // Directory validation
+   if( $('#home').tree('isLeaf', selected.target) && selected.type !== "D" ){
+      var father = $('#home').tree('getParent', selected.target );
+      $('#home').tree('select', father.target);
+       selected = $('#home').tree('getSelected');
+   }
+   // Duplicate check
+   var children = $('#home').tree('getChildren', selected.target );
+   var retVal = true;
+   var cwd = selected.id;
+   var dirname = "Newfolder"
+   var newdir = cwd + "/" + dirname;
+   var count = 1;
+   while( retVal ) {
+       $.each(children, function( index, node) {
+          if( node.id === newdir ){
+             dirname = "Newfolder(" + count + ")";
+             newdir = cwd + "/" + dirname;
+             retVal = false;
+             return false;
+          }
+      });
+      if( !retVal ) {
+        retVal = true;
+        count = count + 1;
+        continue;
+      }else{
+         $('#wait').hide();
+         break;
+      }
+   }
+   // Make Ajax call to create directory
+   var url = "add_dir";
+   var inputs = JSON.stringify({ "cwd": cwd, "dir": dirname});
+   $.ajax({
+        type: "POST",
+        url: url,
+        data: inputs,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        beforeSend: function(  ) {
+             $("#loading").css({"visibility":"visible"});
+        },
+        success: function(data)
+        {
+            if( data.status ){
+               $.messager.alert('Error Message', JSON.stringify(data.message), 'error');
+            }else{
+               $('#home').tree('append', {
+                  parent: selected.target,
+                  data: [{
+                      id: newdir,
+                      type: 'D',
+                      state:'open',
+                      children:[{length:0}],
+                      text: dirname
+                   }]
+               });
+               var node = $('#home').tree('find', newdir);
+               $('#home').tree('select', node.target);
+           }
+           $("#loading").css({"visibility":"hidden"});
+        }
+   });
+}
+   var editors = {};
+   var root = $("#root").val();
+   var ext = $("#ext").val();
+/*
+   var mainfile = root + "/main." + ext;
+   editors[mainfile] = new ace.edit( mainfile );
+   editors[mainfile].setTheme("ace/theme/crimson_editor");
+   editors[mainfile].getSession().setMode("ace/mode/c_cpp");
+   editors[mainfile].getSession().setUseWrapMode(true);
+
+   $("#version").text(" - Compile and Execute C++0x Online (GNU GCC version 4.8.1)");
+*/
+
+   function submitForm(){
+      $("[name='lang']").val("c++0x");
+      $("[name='code']").val(editors['main'].getValue());
+      $('#wait').show(); 
+      var url = "compile_new.php";
+      $.ajax({
+        type: "POST",
+        url: url,
+        target: "view",
+        data: $("#ff").serialize(),
+        success: function(data)
+        {
+            $('#view').contents().find("html").html(data);
+            $('#wait').hide();
+            return false;
+        }
+      });
+      return false; // avoid to execute the actual submit of the form.
+   }
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="term.js"></script>
+<script>
+$(document).ready(function() {
+;(function() {
+  window.onload = function() {
+    $("#loading").css({"visibility":"hidden"});
+    var socket = io.connect();
+    socket.on('connect', function() {
+      var term = new Terminal({
+        cols: 100,
+        rows: 40,
+        useStyle: true,
+        screenKeys: true,
+        cursorBlink: true
+      });
+      socket.emit('data', '\n');
+
+      $("#execute").click(function(){
+          command = $("input[name='command']").val();
+          $("input[name='command']").val('');
+          socket.emit('data', command+'\n');
+          return false;
+      });
+
+      term.on('data', function(data) {
+        socket.emit('data', data);
+      });
+
+      term.on('title', function(title) {
+        document.title = title;
+      });
+
+      term.open(document.getElementById("terminal"));
+
+
+//      term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+      socket.on('data', function(data) {
+        term.write(data);
+      });
+      socket.on('disconnect', function() {
+        term.destroy();
+      });
+    });
+  };
+}).call(this);
+});
+</script>
+</body>
+</html>
+
